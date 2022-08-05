@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Food Collection Database</title>
+
+     <!--bootstrap CDN links -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <div class="row">
+    <div class="col-lg-6">
+      <h1>Food Collection Database</h1>
+      <a href="addNewFood.html"> Add New Food Item</a>
+      <hr>
+      <ul>
+        {% for item in foods%}
+        <li>{{item.title}} <strong>will expire in:</strong> {{item.expiry}} days  <a href="/">EDIT</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="col-lg-6">
+            <h1>Recipe Collection Database</h1>
+      <a href="addNewFood.html"> Add New Recipe</a>
+      <hr>
+      <ul>
+        {% for item in foods%}
+        <li>{{item.title}} <strong>will expire in:</strong> {{item.expiry}} days <a href="/">EDIT</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    </div>
+
+
+
+
+
+
+
+  </body>
+</html>
