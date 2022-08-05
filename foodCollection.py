@@ -51,6 +51,12 @@ class Recipe(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     ingredients = db.relationship("Ingredient", backref="recipe")
 
+    # return a dictionary as a method in class Recipe
+    def to_dict(self):
+        # for each column in table, set key as name of column and value is value of column. 
+        return {column.title: getattr(self, column.title) for column in self.__table__.columns}
+
+
 class Ingredient(db.Model):
     __tablename__ = "ingredient"
     id =  db.Column(db.Integer, primary_key=True)
@@ -86,8 +92,19 @@ class Ingredient(db.Model):
 @app.route("/", methods=["GET", "POST"])
 def main():
     foods = db.session.query(Food).all()
+    recipes = db.session.query(Recipe).all()
 
-    return render_template("index.html", foods = foods)
+    return render_template("index.html", foods = foods, recipes = recipes)
+
+
+@app.route("/addRecipe", methods=["GET"])
+def webAddRecipe():
+    return render_template("addNewRecipe.html")
+
+@app.route("/addFood", methods=["GET"])
+def webAddFood():
+    return render_template("addNewFood.html")
+
 
 # create record
 @app.route("/add")

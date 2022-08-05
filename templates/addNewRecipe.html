@@ -10,11 +10,25 @@
 
   </head>
   <body>
-      <h1>Recipe Collection Database: Add New Food Item</h1>
+    <div class="container-fluid" style="padding: 5rem">
+      <h1>Add New Recipe!</h1>
+      <form>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Recipe Title</label>
+          <input type="text" class="form-control" id="recipeTitle" placeholder="Name of Recipe">
+        </div>
+        <label for="customRange3" class="form-label">Rating</label>
+        <input type="range" class="form-range" min="0" max="10" step="1 id="rating">
+        <h5>Ingredients:</h5>
+
+        <div class="mb-3">
+          <label for="instructions" class="form-label">Instructions:</label>
+          <textarea class="form-control" id="instructions" rows="3"></textarea>
+        </div>
+      </form>
 
 
 
-
-
+    </div>
   </body>
 </html>

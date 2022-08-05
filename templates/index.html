@@ -10,10 +10,10 @@
 
   </head>
   <body>
-    <div class="row">
+    <div class="container-fluid row" style="padding: 5rem">
     <div class="col-lg-6">
       <h1>Food Collection Database</h1>
-      <a href="addNewFood.html"> Add New Food Item</a>
+      <a href="{{url_for('webAddFood')}}"> Add New Food Item</a>
       <hr>
       <ul>
         {% for item in foods%}
@@ -24,13 +24,22 @@
 
     <div class="col-lg-6">
             <h1>Recipe Collection Database</h1>
-      <a href="addNewFood.html"> Add New Recipe</a>
+      <a href="{{url_for('webAddRecipe')}}"> Add New Recipe</a>
       <hr>
-      <ul>
-        {% for item in foods%}
-        <li>{{item.title}} <strong>will expire in:</strong> {{item.expiry}} days <a href="/">EDIT</a></li>
+        {% for item in recipes%}
+        <h2><a href={{item.url}}>{{item.title}}</a>   <a href="/">EDIT</a></h2>
+        <h5>Rating: {{item.rating}} / 10</h5>
+        <h5>Ingredients:</h5>
+        <ul>
+          {% for ingredient in item.ingredients %}
+          <li>{{ingredient.name}} - {{ingredient.quantity}} <a href="/">EDIT</a></li>
+          {% endfor %}
+        </ul>
+  
+        <h5>Instructions:</h5>
+        <p>{{item.instructions}}</p>
+        <hr>
         {% endfor %}
-      </ul>
     </div>
     </div>
 
