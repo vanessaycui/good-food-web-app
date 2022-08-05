@@ -43,27 +43,45 @@ class Food(db.Model):
         return {column.title: getattr(self, column.title) for column in self.__table__.columns}
 
 class Recipe(db.Model):
-    __tablename__="recipe"
+    __tablename__ = "recipe"
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), unique=True, nullable=False)
-    instructions = db.Column(db.String(500), unique=True, nullable=False)
-    url = db.Column(db.String(80), unique=True, nullable=False)
-    ingredient = db.relationship("Ingredient", backref="recipe")
-
+    title = db.Column(db.String(80), nullable=False)
+    instructions = db.Column(db.String(500), nullable=False)
+    url = db.Column(db.String(80), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    ingredients = db.relationship("Ingredient", backref="recipe")
 
 class Ingredient(db.Model):
-    __tablename__="ingredient"
+    __tablename__ = "ingredient"
     id =  db.Column(db.Integer, primary_key=True)
-    recipeid = db.Column(db.Integer, db.ForeignKey("recipe.id"))
+    name = db.Column(db.String(80), nullable=False)
+    quantity = db.Column(db.String(80), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"))
 
-
-    # return a dictionary as a method in class Recipe
-    def to_dict(self):
-        # for each column in table, set key as name of column and value is value of column.
-        return {column.title: getattr(self, column.title) for column in self.__table__.columns}
 
 # # create  initial database. ran once.
 # db.create_all()
+
+# bananabread = Recipe(
+#     title = "Banana Bread",
+#     instructions = "1.Preheat oven to 350.\n"
+#                    "2.Whisk flour, backing soda, salt, and cinnamon together in a large bowl.\n"
+#                    "3.Beat butter and brown sugar together on high speed until smooth and creamy. Add eggs one at a time. Beat in yogurt, mashed bananas, and vanilla extract. Fold in dry ingredients\n"
+#                    "4.Place batter in buttered pan and bake for 60-65 minutes. Cover bread with foil after 30 minutes. Done when toothpick comes out clean\n"
+#                    "5.Can be stored at room temperature for 2 days or the refrigerator for 1 week.",
+#     url = "https://sallysbakingaddiction.com/best-banana-bread-recipe/",
+#     rating = 8,
+# )
+# #
+# ingredient = Ingredient(
+#     recipe_id = 1,
+#     name = "Bananas",
+#     quantity = "2 cups",
+# )
+
+# db.session.add(ingredient)
+# db.session.commit()
+
 
 @app.route("/", methods=["GET", "POST"])
 def main():
@@ -86,7 +104,7 @@ def post_new_food():
         db.session.add(newFoodEntry)
         db.session.commit()
         return jsonify(response = {"Success": "Successfully added new food item"})
-    else: 
+    else:
         return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
 
 
