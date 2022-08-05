@@ -23,21 +23,24 @@
     </div>
 
     <div class="col-lg-6">
-            <h1>Recipe Collection Database</h1>
+      <h1>Recipe Collection Database</h1>
       <a href="{{url_for('webAddRecipe')}}"> Add New Recipe</a>
       <hr>
         {% for item in recipes%}
-        <h2><a href={{item.url}}>{{item.title}}</a>   <a href="/">EDIT</a></h2>
-        <h5>Rating: {{item.rating}} / 10</h5>
-        <h5>Ingredients:</h5>
+        <h5><strong><a href={{item.url}}>{{item.title}}</a></strong>   <a href="/">EDIT</a></h5>
+        
+        <h6>Rating: {{item.rating}} / 5</h6>
+        <h6>Ingredients:</h6>
         <ul>
           {% for ingredient in item.ingredients %}
           <li>{{ingredient.name}} - {{ingredient.quantity}} <a href="/">EDIT</a></li>
           {% endfor %}
         </ul>
   
-        <h5>Instructions:</h5>
-        <p>{{item.instructions}}</p>
+        <h6>Instructions:</h6>
+        {%for step in item.instructions.split("\n") %}
+        <p>{{step}}</p>
+        {% endfor %}
         <hr>
         {% endfor %}
     </div>
