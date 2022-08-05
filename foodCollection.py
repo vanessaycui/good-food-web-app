@@ -21,17 +21,16 @@
 from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 
-import json
 from sqlalchemy import column
 
+# *** CONFIGURE FLASK APPLICATION ***
 app = Flask(__name__)
-
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///food-collection.db'
 #Optional: But it will silence the deprecation warning in the console.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# create tables
+# *** DATABASE TABLES ***
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), unique=True, nullable=False)
@@ -56,7 +55,6 @@ class Recipe(db.Model):
         # for each column in table, set key as name of column and value is value of column. 
         return {column.title: getattr(self, column.title) for column in self.__table__.columns}
 
-
 class Ingredient(db.Model):
     __tablename__ = "ingredient"
     id =  db.Column(db.Integer, primary_key=True)
@@ -65,7 +63,7 @@ class Ingredient(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"))
 
 
-# # create  initial database. ran once.
+# ******* create  initial database. ran once. *********
 # db.create_all()
 
 # bananabread = Recipe(
@@ -91,9 +89,19 @@ class Ingredient(db.Model):
 
 @app.route("/", methods=["GET", "POST"])
 def main():
+    if request.method == "POST":
+        if request.form.get("food_name") == None or request.args.get("expiry_day") == None:
+            pass
+        else:
+            newFoodEntry = Food(
+                title = request.form.get("food_name"),
+                expiry = request.args.get("expiry_day"),
+            )
+            db.session.add(newFoodEntry)
+            db.session.commit()
+
     foods = db.session.query(Food).all()
     recipes = db.session.query(Recipe).all()
-
     return render_template("index.html", foods = foods, recipes = recipes)
 
 
