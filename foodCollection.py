@@ -18,7 +18,7 @@
 
 # use SQLAlchemy
 
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 from sqlalchemy import column
@@ -86,16 +86,22 @@ class Ingredient(db.Model):
 # db.session.add(ingredient)
 # db.session.commit()
 
-
+# web app - main page 
 @app.route("/", methods=["GET", "POST"])
 def main():
     if request.method == "POST":
-        if request.form.get("food_name") == None or request.args.get("expiry_day") == None:
+        food = request.form.get("food_name")
+        expiry = request.form.get("expiry_day")
+        print(food)
+        print(expiry)
+
+        if  food == None or expiry == None or food == "":
+            print("You had a missing field. Please fill in all fields to add new item.")
             pass
         else:
             newFoodEntry = Food(
-                title = request.form.get("food_name"),
-                expiry = request.args.get("expiry_day"),
+                title = food,
+                expiry = expiry,
             )
             db.session.add(newFoodEntry)
             db.session.commit()
@@ -104,17 +110,100 @@ def main():
     recipes = db.session.query(Recipe).all()
     return render_template("index.html", foods = foods, recipes = recipes)
 
+# web app -> delete food item in database
+@app.route("/deleteFood")
+def deleteFood():
+    food_id = request.args.get('id')
+    food_to_delete = Food.query.get(food_id)
+    db.session.delete(food_to_delete)
+    db.session.commit()
+    return redirect(url_for('main'))
 
+# web app -> edit existing item
+@app.route("/editFood", methods=["GET", "POST"])
+def editFood():
+    if request.method == "POST":
+        food_id=request.form["id"]
+        food_to_update = Food.query.get(food_id)
+        food = request.form.get("food_name")
+        expiry = request.form.get("expiry_day")
+        # update record
+        if  food == None or expiry == None or food == "":
+            print("You had a missing field. Please fill in all fields to add new item.")
+            pass
+        else:
+            food_to_update.title = food
+            food_to_update.expiry = expiry
+            db.session.commit()
+            return redirect(url_for('main'))
+    
+    food_id = request.args.get('id')
+    food_to_display = Food.query.get(food_id)
+    return render_template("editFood.html", food = food_to_display)
+
+
+# web app -> add new recipe 
 @app.route("/addRecipe", methods=["GET"])
 def webAddRecipe():
     return render_template("addNewRecipe.html")
 
+# web app -> edit existing recipe ingredient
+@app.route("/editIngredient", methods=["GET", "POST"])
+def editIngredient():
+    if request.method == "POST":
+        ingredient_id=request.form["id"]
+        ingredient_to_update = Ingredient.query.get(ingredient_id)
+        ingredient = request.form.get("ingredient")
+        quantity = request.form.get("quantity")
+        # update record
+        if  ingredient == None or quantity == None or ingredient== "" or quantity == "":
+            print("You had a missing field. Please fill in all fields to add new item.")
+            pass
+        else:
+            ingredient_to_update.name = ingredient
+            ingredient_to_update.quantity = quantity
+            db.session.commit()
+            return redirect(url_for('main'))
+    
+    ingredient_id = request.args.get('id')
+    ingredient_display = Ingredient.query.get(ingredient_id)
+    return render_template("editIngredient.html", ingredient= ingredient_display)
+
+# web app -> delete ingredient
+@app.route("/deleteIngredient")
+def deleteIngredient():
+    ingredient_id = request.args.get('id')
+    ingredient_to_delete = Ingredient.query.get(ingredient_id)
+    db.session.delete(ingredient_to_delete)
+    db.session.commit()
+    return redirect(url_for('main'))
+
+# web app -> add ingredient
+@app.route("/addIngredient", methods=["GET","POST"])
+def addIngredient():
+    if request.method == "POST":
+        ingredient_to_add = Ingredient(
+            name = request.form.get("ingredient"),
+            quantity = request.form.get("quantity"),
+            recipe_id = request.form["id"]
+        )
+
+        db.session.add(ingredient_to_add)
+        db.session.commit()
+        return redirect(url_for('main'))
+    
+
+    recipe_id = request.args.get('id')
+    recipe_to_display=Recipe.query.get(recipe_id)
+    return render_template("addIngredient.html", recipe=recipe_to_display)
+
+# web app -> add new food
 @app.route("/addFood", methods=["GET"])
 def webAddFood():
     return render_template("addNewFood.html")
 
 
-# create record
+# create record API
 @app.route("/add")
 def post_new_food():
 
@@ -134,7 +223,7 @@ def post_new_food():
 
 
 
-# search for food
+# search for food via API
 @app.route("/search")
 def get_food_name():
     food_name = request.args.get("title")
@@ -144,7 +233,7 @@ def get_food_name():
     else:
         return jsonify(error={"Not Found": "Sorry food item not found in the database."}), 404
 
-# print everything out onto database.
+# print everything out onto database API
 @app.route("/all")
 def get_all_food():
     foods = db.session.query(Food).all()

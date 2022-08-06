@@ -16,20 +16,21 @@
   <body>
     <div class="container-fluid" style="padding: 5rem">
 
-      <h1>Add New Food item</h1>
+      <h1>Edit Food item</h1>
 
       <!-- add new item form. redirect to main page. -->
-      <form action="/" method="POST">
+      <form action="{{ url_for('editFood') }}" method="POST">
 
         <!-- input grid -->
         <div class="row">
           <div class="col">
-            <label>New Food Item</label>
-            <input name="food_name" type="text" class="form-control" placeholder="Name">
+            <input hidden="hidden" name="id" value="{{food.id}}">
+            <label>Edit Food Name</label>
+            <input name="food_name" type="text" class="form-control" value="{{food.title}}">
           </div>
           <div class="col">
             <div class="form-group">
-              <label>Days until Expiry</label>
+              <label>Edit Days until Expiry</label>
               <select name="expiry_day" multiple class="form-control">
                 <option>1</option>
                 <option>2</option>
@@ -49,9 +50,14 @@
         <br>
 
         <!-- submit button -->
-        <input class="btn btn-primary" type="submit" value="Add">
+        <input class="btn btn-primary" type="submit" value="Edit">
 
       </form>
+
+      <br>
+        
+        <a class="btn btn-primary" href="{{url_for('main')}}"> Nevermind </a> 
+
 
     </div>
 

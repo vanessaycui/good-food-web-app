@@ -14,10 +14,11 @@
     <div class="col-lg-6">
       <h1>Food Collection Database</h1>
       <a href="{{url_for('webAddFood')}}"> Add New Food Item</a>
+      <p>🍏</p>
       <hr>
       <ul>
         {% for item in foods%}
-        <li>{{item.title}} <strong>will expire in:</strong> {{item.expiry}} days  <a href="/">EDIT</a></li>
+        <li>{{item.title}} <strong>will expire in:</strong> {{item.expiry}} days  <a href="{{ url_for('editFood', id=item.id) }}">EDIT</a> <a href="{{ url_for('deleteFood', id=item.id) }}">DELETE</a></li>
         {% endfor %}
       </ul>
     </div>
@@ -25,18 +26,22 @@
     <div class="col-lg-6">
       <h1>Recipe Collection Database</h1>
       <a href="{{url_for('webAddRecipe')}}"> Add New Recipe</a>
+      <p><em>📚 Please note that recipe ingredients must be fully deleted before recipes can be deleted.</em></p>
       <hr>
         {% for item in recipes%}
-        <h5><strong><a href={{item.url}}>{{item.title}}</a></strong>   <a href="/">EDIT</a></h5>
+        <h5><strong><a href={{item.url}}>{{item.title}}</a></strong>   <a href="/">EDIT</a> <a href="/">DELETE</a></h5>
+        
         
         <h6>Rating: {{item.rating}} / 5</h6>
         <h6>Ingredients:</h6>
         <ul>
           {% for ingredient in item.ingredients %}
-          <li>{{ingredient.name}} - {{ingredient.quantity}} <a href="/">EDIT</a></li>
+          <li>{{ingredient.name}} - {{ingredient.quantity}} <a href="{{ url_for('editIngredient', id=ingredient.id) }}">EDIT</a> <a href="{{ url_for('deleteIngredient', id=ingredient.id) }}">DELETE</a></li>
           {% endfor %}
+          <li><a class="btn btn-primary" href="{{ url_for('addIngredient', id=item.id) }}">+</a></li>
         </ul>
-  
+        
+        
         <h6>Instructions:</h6>
         {%for step in item.instructions.split("\n") %}
         <p>{{step}}</p>
