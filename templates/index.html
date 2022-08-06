@@ -29,7 +29,7 @@
       <p><em>📚 Please note that recipe ingredients must be fully deleted before recipes can be deleted.</em></p>
       <hr>
         {% for item in recipes%}
-        <h5><strong><a href={{item.url}}>{{item.title}}</a></strong>   <a href="/">EDIT</a> <a href="{{ url_for('deleteRecipe', id=item.id) }}">DELETE</a></h5>
+        <h5><strong><a href={{item.url}}>{{item.title}}</a></strong>   <a href="{{ url_for('editRecipe', id=item.id) }}">EDIT</a> <a href="{{ url_for('deleteRecipe', id=item.id) }}">DELETE</a></h5>
         
         
         <h6>Rating: {{item.rating}} / 5</h6>

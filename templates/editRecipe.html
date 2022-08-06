@@ -2,126 +2,57 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <meta charset="utf-8">
-  <title>Edit Recipe</title>
+    <meta charset="utf-8">
+    <title>Edit Recipe</title>
 
-  <!--bootstrap CDN links -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <!--bootstrap CDN links -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
 </head>
 
 <body>
-  <div class="container-fluid" style="padding:5rem">
-    <h1>Edit Recipe!</h1>
+    <div class="container-fluid" style="padding:5rem">
+        <h1>Edit Recipe!</h1>
 
-    <form action="{{ url_for('webAddRecipe') }}", method="POST">
-    <div class="row" style="padding: 5rem">
-      
-      <div class="col-lg-6">
+        <form action="{{ url_for('editRecipe') }}" , method="POST">
+            <input hidden="hidden" name="id" value="{{recipe.id}}">
 
-        <div class="mb-3">
-          <input type="text" class="form-control" name="recipeTitle" placeholder="Recipe Title">
-        </div>
-        <br>
-        <h5>Ingredients:</h5>
-        <div class="row">
-          <div class="col">
-            <input name="i1" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i2" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i3" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i4" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i5" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i6" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i7" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i8" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i9" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i10" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i11" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i12" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i13" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i14" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i15" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i16" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i17" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i18" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i19" type="text" class="form-control" placeholder="Ingredient">
-            <input name="i20" type="text" class="form-control" placeholder="Ingredient">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="recipeTitle" value="{{recipe.title}}">
+            </div>
 
-          </div>
-          <div class="col">
-            <input name="q1" type="text" class="form-control" placeholder="Quantity">
-            <input name="q2" type="text" class="form-control" placeholder="Quantity">
-            <input name="q3" type="text" class="form-control" placeholder="Quantity">
-            <input name="q4" type="text" class="form-control" placeholder="Quantity">
-            <input name="q5" type="text" class="form-control" placeholder="Quantity">
-            <input name="q6" type="text" class="form-control" placeholder="Quantity">
-            <input name="q7" type="text" class="form-control" placeholder="Quantity">
-            <input name="q8" type="text" class="form-control" placeholder="Quantity">
-            <input name="q9" type="text" class="form-control" placeholder="Quantity">
-            <input name="q10" type="text" class="form-control" placeholder="Quantity">
-            <input name="q11" type="text" class="form-control" placeholder="Quantity">
-            <input name="q12" type="text" class="form-control" placeholder="Quantity">
-            <input name="q13" type="text" class="form-control" placeholder="Quantity">
-            <input name="q14" type="text" class="form-control" placeholder="Quantity">
-            <input name="q15" type="text" class="form-control" placeholder="Quantity">
-            <input name="q16" type="text" class="form-control" placeholder="Quantity">
-            <input name="q17" type="text" class="form-control" placeholder="Quantity">
-            <input name="q18" type="text" class="form-control" placeholder="Quantity">
-            <input name="q19" type="text" class="form-control" placeholder="Quantity">
-            <input name="q20" type="text" class="form-control" placeholder="Quantity">
-            
+            <div class="mb-3">
+                <input type="text" class="form-control" name="recipeURL" value="{{recipe.url}}">
+            </div>
 
-          </div>
-        </div>
+            <br>
 
-        <br>
-      </div>
-
-
-      <div class="col-lg-6">
-        <div class="mb-3">
-          <input type="text" class="form-control" name="recipeURL" placeholder="URL">
-        </div>
-        <br>
-        <h5>Rating:</h5>
-        <select class="form-select" name="rating">
-          <option selected>Rating</option>
-          <option value="1">❤️</option>
-          <option value="2">❤️❤️</option>
-          <option value="3">❤️❤️❤️</option>
-          <option value="4">❤️❤️❤️❤️</option>
-          <option value="5">❤️❤️❤️❤️❤️</option>
-        </select>
-        <br>
-
-
-
-
-        <!-- add instructions -->
-        <h5>Instructions:</h5>
-        <div class="mb-3">
-          <textarea class="form-control" name="instructions" rows="25"
-            placeholder="Add instructions here."></textarea>
-        </div>
-        <div class="row">
-          <div class="col-2">
-            <input class="btn btn-primary" type="submit" value="Add">
-          </div>
-          <div class="col-1">
-            <a class="btn btn-primary" href="{{url_for('main')}}"> Nevermind </a>
-          </div>
-        </div>
-
-
+            <h5>Rating:</h5>
+            <select class="form-select" name="rating">
+                <option selected>Rating</option>
+                <option value="1">❤️</option>
+                <option value="2">❤️❤️</option>
+                <option value="3">❤️❤️❤️</option>
+                <option value="4">❤️❤️❤️❤️</option>
+                <option value="5">❤️❤️❤️❤️❤️</option>
+            </select>
+            <br>
+            <!-- add instructions -->
+            <h5>Instructions:</h5>
+            <div class="mb-3">
+                <textarea class="form-control" name="instructions" rows="20">{{recipe.instructions}}</textarea>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <input class="btn btn-primary" type="submit" value="Add">
+                </div>
+                <div class="col-1">
+                    <a class="btn btn-primary" href="{{url_for('main')}}"> Nevermind </a>
+                </div>
+            </div>
         </form>
-
-      </div>
-
     </div>
-
-  </div>
-
 </body>
 
 </html>

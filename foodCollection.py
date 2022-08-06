@@ -66,26 +66,6 @@ class Ingredient(db.Model):
 # ******* create  initial database. ran once. *********
 # db.create_all()
 
-# bananabread = Recipe(
-#     title = "Banana Bread",
-#     instructions = "1.Preheat oven to 350.\n"
-#                    "2.Whisk flour, backing soda, salt, and cinnamon together in a large bowl.\n"
-#                    "3.Beat butter and brown sugar together on high speed until smooth and creamy. Add eggs one at a time. Beat in yogurt, mashed bananas, and vanilla extract. Fold in dry ingredients\n"
-#                    "4.Place batter in buttered pan and bake for 60-65 minutes. Cover bread with foil after 30 minutes. Done when toothpick comes out clean\n"
-#                    "5.Can be stored at room temperature for 2 days or the refrigerator for 1 week.",
-#     url = "https://sallysbakingaddiction.com/best-banana-bread-recipe/",
-#     rating = 8,
-# )
-# #
-# ingredient = Ingredient(
-#     recipe_id = 1,
-#     name = "Bananas",
-#     quantity = "2 cups",
-# )
-
-# db.session.add(ingredient)
-# db.session.commit()
-
 # web app - main page 
 @app.route("/", methods=["GET", "POST"])
 def main():
@@ -170,7 +150,7 @@ def webAddRecipe():
         return redirect(url_for('main'))
     return render_template("addNewRecipe.html")
 
-    # web app -> delete recipe
+# web app -> delete recipe
 @app.route("/deleteRecipe")
 def deleteRecipe():
     recipe_id = request.args.get('id')
@@ -178,6 +158,30 @@ def deleteRecipe():
     db.session.delete(recipe_to_delete)
     db.session.commit()        
     return redirect(url_for('main'))
+
+# web app -> edit Recipe
+@app.route("/editRecipe", methods=["GET", "POST"])
+def editRecipe():
+
+    if request.method == "POST":
+        recipe_id = request.form['id']
+        recipe_to_update = Recipe.query.get(recipe_id)
+        rating = request.form.get("rating")
+
+        if rating == "Rating":
+            print("Please add a rating")
+            return redirect(url_for('main'))
+        else:
+            recipe_to_update.title = request.form.get("recipeTitle")
+            recipe_to_update.url = request.form.get("recipeURL")
+            recipe_to_update.rating = rating
+            recipe_to_update.instructions = request.form.get("instructions")
+            db.session.commit()
+        return redirect(url_for('main'))
+
+    recipe_id = request.args.get('id')
+    recipe_to_edit = Recipe.query.get(recipe_id) 
+    return render_template("editRecipe.html", recipe = recipe_to_edit)
 
 # web app -> edit ingredient
 @app.route("/editIngredient", methods=["GET", "POST"])
