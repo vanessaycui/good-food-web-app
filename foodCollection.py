@@ -143,11 +143,43 @@ def editFood():
 
 
 # web app -> add new recipe 
-@app.route("/addRecipe", methods=["GET"])
+@app.route("/addRecipe", methods=["GET", "POST"])
 def webAddRecipe():
+    if request.method == "POST":
+        
+        print(type(request.form.get("instructions")))
+        newRecipe = Recipe(
+            title = request.form.get("recipeTitle"),
+            rating=request.form.get("rating"),
+            instructions = request.form.get("instructions"),
+            url = request.form.get("recipeURL")
+        )
+        # loop through table of ingredients and get ingredients if theyre not empty    
+        for i in range(20):
+            ingredient = request.form.get("i"+ str(i+1))
+            quantity = request.form.get("q"+str(i+1))
+            if ingredient != "" or quantity != "":
+                newIngredient = Ingredient(
+                    recipe=newRecipe,
+                    name = ingredient,
+                    quantity = quantity,
+                )
+        
+        db.session.add(newRecipe)
+        db.session.commit()     
+        return redirect(url_for('main'))
     return render_template("addNewRecipe.html")
 
-# web app -> edit existing recipe ingredient
+    # web app -> delete recipe
+@app.route("/deleteRecipe")
+def deleteRecipe():
+    recipe_id = request.args.get('id')
+    recipe_to_delete = Recipe.query.get(recipe_id)
+    db.session.delete(recipe_to_delete)
+    db.session.commit()        
+    return redirect(url_for('main'))
+
+# web app -> edit ingredient
 @app.route("/editIngredient", methods=["GET", "POST"])
 def editIngredient():
     if request.method == "POST":
