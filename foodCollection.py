@@ -21,8 +21,6 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import column
-
 # *** CONFIGURE FLASK APPLICATION ***
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///food-collection.db'
@@ -39,10 +37,9 @@ class Food(db.Model):
     # return a dictionary as a method in class Food
     def to_dict(self):
         # for each column in table, set key as name of column and value is value of column. 
-        return {column.title: getattr(self, column.title) for column in self.__table__.columns}
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
 
 class Recipe(db.Model):
-    __tablename__ = "recipe"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     instructions = db.Column(db.String(500), nullable=False)
@@ -53,15 +50,19 @@ class Recipe(db.Model):
     # return a dictionary as a method in class Recipe
     def to_dict(self):
         # for each column in table, set key as name of column and value is value of column. 
-        return {column.title: getattr(self, column.title) for column in self.__table__.columns}
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+            
 
 class Ingredient(db.Model):
-    __tablename__ = "ingredient"
     id =  db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     quantity = db.Column(db.String(80), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"))
 
+    # return a dictionary as a method in class Ingredient
+    def to_dict(self):
+        # for each column in table, set key as name of column and value is value of column. 
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
 
 # ******* create  initial database. ran once. *********
 # db.create_all()
@@ -239,7 +240,7 @@ def webAddFood():
     return render_template("addNewFood.html")
 
 
-# create record API
+# API -> add new food. when user enters in food collection, it checks if it's unique before adding.
 @app.route("/add")
 def post_new_food():
 
@@ -259,7 +260,7 @@ def post_new_food():
 
 
 
-# search for food via API
+# API -> search food
 @app.route("/search")
 def get_food_name():
     food_name = request.args.get("title")
@@ -269,12 +270,57 @@ def get_food_name():
     else:
         return jsonify(error={"Not Found": "Sorry food item not found in the database."}), 404
 
-# print everything out onto database API
-@app.route("/all")
-def get_all_food():
+# API -> print all food
+@app.route("/allfoods")
+def get_all_foods():
     foods = db.session.query(Food).all()
-    print(foods)
     return jsonify(food=[item.to_dict() for item in foods])
+
+# API -> print all recipe
+@app.route("/allrecipes")
+def get_all_recips():
+    recipes = db.session.query(Recipe).all()
+    return jsonify(recipe=[recipe.to_dict() for recipe in recipes])
+
+# API -> print all ingredient
+@app.route("/allingredients")
+def get_all_ingredients():
+    ingredients = db.session.query(Ingredient).all()
+    return jsonify(ingredient=[ingredient.to_dict() for ingredient in ingredients])
+
+
+# API -> print all combined recipes and ingredients together
+@app.route ("/allRecipesIngredients")
+def get_all_recipes_ingredients():
+    ingredients=db.session.query(Ingredient).all()
+    recipes=db.session.query(Recipe).all()
+
+    ingredients_dict = [ingredient.to_dict() for ingredient in ingredients]
+ 
+    recipes_dict = [recipe.to_dict() for recipe in recipes]
+
+
+    combined_list = []
+    
+    for recipe in recipes_dict:
+
+        ingredient_list = []
+        for ingredient in ingredients_dict:
+           if ingredient["recipe_id"] == recipe["id"]:
+                ingredient_list.append(ingredient)
+        
+        new_dict = {
+            "ingredient" : ingredient_list
+        }
+        recipe.update(new_dict)
+        combined_list.append(recipe)
+        
+
+    return jsonify(combined_list)
+
+
+        
+
 
 
 if __name__ == '__main__':
