@@ -316,7 +316,7 @@ def get_all_recipes_ingredients():
         combined_list.append(recipe)
         
 
-    return jsonify(combined_list)
+    return jsonify(recipes = combined_list)
 
 
         
