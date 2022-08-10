@@ -318,10 +318,5 @@ def get_all_recipes_ingredients():
 
     return jsonify(recipes = combined_list)
 
-
-        
-
-
-
 if __name__ == '__main__':
     app.run(debug=True)
