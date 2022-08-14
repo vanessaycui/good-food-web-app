@@ -32,7 +32,7 @@ ENV='prod'
 if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:neg6x2VC!123@localhost/foodcollection'
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://llbrlqxcecybnh:c3fb84caa1b9fe77f6137d8caa2c565493fa346daa627367754bf700fdd9ca79@ec2-34-203-182-65.compute-1.amazonaws.com:5432/dag7r4i1skmfpt'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 # "sqlite:///food-collection.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
