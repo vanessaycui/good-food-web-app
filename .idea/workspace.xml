@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="db55a591-70ac-4e58-bbe0-5ae8f6cc186a" name="Changes" comment="" />
+    <list default="true" id="db55a591-70ac-4e58-bbe0-5ae8f6cc186a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/foodCollection.py" beforeDir="false" afterPath="$PROJECT_DIR$/foodCollection.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
