@@ -29,12 +29,11 @@ import os
 app = Flask(__name__)
 #Optional: But it will silence the deprecation warning in the console.
 
-secret = os.getenv('DATABASEURL')
-app.config['SQLALCHEMY_DATABASE_URI'] = secret
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("postgresql://bmuglyuqbysfju:23582e71cc7a70ecb560a544afb273c13ae944eebf4f567ddaa76d21bef032d3@ec2-44-195-100-240.compute-1.amazonaws.com:5432/df6ov0moi33t60",  "sqlite:///food-collection.db")
 # "sqlite:///food-collection.db"
 
-print(os.getenv('DATABASE_URL'))
-print(os.getenv('DATABASEURL'))
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
