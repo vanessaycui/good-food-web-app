@@ -274,7 +274,7 @@ def get_food_name():
 @app.route("/allfoods")
 def get_all_foods():
     foods = db.session.query(Food).all()
-    return jsonify(food=[item.to_dict() for item in foods])
+    return jsonify(collection=[item.to_dict() for item in foods])
 
 # API -> print all recipe
 @app.route("/allrecipes")
