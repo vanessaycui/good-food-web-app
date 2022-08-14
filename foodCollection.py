@@ -74,7 +74,7 @@ class Ingredient(db.Model):
 # db.create_all()
 
 # web app - main page 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/main", methods=["GET", "POST"])
 def main():
     if request.method == "POST":
         food = request.form.get("food_name")
