@@ -25,10 +25,11 @@ import os
 # *** CONFIGURE FLASK APPLICATION ***
 app = Flask(__name__)
 #Optional: But it will silence the deprecation warning in the console.
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///food-collection.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+del os.environ['DATABASE_URL']
 # *** DATABASE TABLES ***
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
