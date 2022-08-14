@@ -28,7 +28,7 @@ from boto.s3.connection import S3Connection
 # *** CONFIGURE FLASK APPLICATION ***
 app = Flask(__name__)
 #Optional: But it will silence the deprecation warning in the console.
-app.config['SQLALCHEMY_DATABASE_URI'] = S3Connection(os.environ(['S3_KEY'], os.environ['S3_SECRET']))
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASEURL",  "sqlite:///food-collection.db")
 # "sqlite:///food-collection.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
