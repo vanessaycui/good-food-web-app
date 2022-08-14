@@ -20,11 +20,12 @@
 
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 # *** CONFIGURE FLASK APPLICATION ***
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///food-collection.db'
 #Optional: But it will silence the deprecation warning in the console.
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
