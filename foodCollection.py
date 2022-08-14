@@ -29,7 +29,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:/
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-del os.environ['DATABASE_URL']
+
 # *** DATABASE TABLES ***
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
