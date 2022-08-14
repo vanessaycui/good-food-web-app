@@ -30,9 +30,9 @@ app = Flask(__name__)
 #Optional: But it will silence the deprecation warning in the console.
 ENV='prod'
 if ENV == 'dev':
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:neg6x2VC!123@localhost/foodcollection'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('LOCAL_DB_URL')
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URL')
 # "sqlite:///food-collection.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
