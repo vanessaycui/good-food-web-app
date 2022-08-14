@@ -30,7 +30,7 @@ app = Flask(__name__)
 #Optional: But it will silence the deprecation warning in the console.
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASEURL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASEURL', 'sqlite:///food-collection.db')
 # "sqlite:///food-collection.db"
 
 
