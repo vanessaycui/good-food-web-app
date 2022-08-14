@@ -1,1 +1,1 @@
-web:gunicorn foodCollection:app
+web: gunicorn foodCollection:app
