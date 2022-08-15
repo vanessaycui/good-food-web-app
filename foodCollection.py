@@ -250,19 +250,27 @@ def webAddFood():
 @app.route("/add")
 def post_new_food():
 
-    api_key = request.args.get("api_key")
-    if api_key == "TopSecretAPIKey":
+    # api_key = request.args.get("api_key")
+    # if api_key == "TopSecretAPIKey":
 
-        newFoodEntry = Food(
-            title = request.args.get("title"),
-            expiry = request.args.get("expiry"),
-        )
+    #     newFoodEntry = Food(
+    #         title = request.args.get("title"),
+    #         expiry = request.args.get("expiry"),
+    #     )
 
+    #     db.session.add(newFoodEntry)
+    #     db.session.commit()
+
+    # my app will be sending a POST request via json encoding.
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        json = request.json
+        newFoodEntry = Food(title = json["title"], expiry=json["expiry"])
         db.session.add(newFoodEntry)
         db.session.commit()
         return jsonify(response = {"Success": "Successfully added new food item"})
     else:
-        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+        return jsonify(error={"Forbidden": "Content-Type not supported"}), 403
 
 
 
