@@ -247,7 +247,7 @@ def webAddFood():
 
 
 # API -> add new food. when user enters in food collection, it checks if it's unique before adding.
-@app.route("/add")
+@app.route("/add", methods=['POST'])
 def post_new_food():
 
     # api_key = request.args.get("api_key")
@@ -263,7 +263,7 @@ def post_new_food():
 
     # my app will be sending a POST request via json encoding.
     content_type = request.headers.get('Content-Type')
-    if (content_type == 'application/json'):
+    if content_type == 'application/json':
         json = request.json
         newFoodEntry = Food(title = json["title"], expiry=json["expiry"])
         db.session.add(newFoodEntry)
