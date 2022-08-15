@@ -268,7 +268,8 @@ def post_new_food():
         newFoodEntry = Food(title = json["title"], expiry=json["expiry"])
         db.session.add(newFoodEntry)
         db.session.commit()
-        return jsonify(response = {"Success": "Successfully added new food item"})
+        return json
+        # return jsonify(response = {"Success": "Successfully added new food item"})
     else:
         return jsonify(error={"Forbidden": "Content-Type not supported"}), 403
 
