@@ -15,7 +15,7 @@
   <div class="container-fluid" style="padding:5rem">
     <h1>Add New Recipe!</h1>
 
-    <form action="{{ url_for('webAddRecipe') }}", method="POST">
+    <form action="{{ url_for('webAddRecipe') }}", method="POST", enctype = "multipart/form-data" >
     <div class="row" style="padding: 5rem">
       
       <div class="col-lg-6">
@@ -94,14 +94,32 @@
           <option value="5">❤️❤️❤️❤️❤️</option>
         </select>
         <br>
+        
+        <!-- add place to upload image for recipe. -->
 
+        <h5>Select an Image:</h5>
+        <div class = "form-group">
+        <input type="file" name="recipeImage" id="recipeImage">
+      </div>
+      <br>
 
-
+      <h5>Type of Food:</h5>
+      <select class="form-select" name="foodType">
+        <option selected>Cuisine</option>
+        <option value="1">Korean</option>
+        <option value="2">Japanese</option>
+        <option value="3">Chinese</option>
+        <option value="4">American</option>
+        <option value="5">Italian</option>
+        <option value="5">Indian</option>
+        <option value="5">Thai</option>
+      </select>
+      <br>
 
         <!-- add instructions -->
         <h5>Instructions:</h5>
         <div class="mb-3">
-          <textarea class="form-control" name="instructions" rows="25"
+          <textarea class="form-control" name="instructions" rows="15"
             placeholder="Add instructions here."></textarea>
         </div>
         <div class="row">

@@ -21,17 +21,26 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
+import base64
+from PIL import Image
+from werkzeug.utils import secure_filename
+from io import BytesIO
 
+# allowed extensions for the images
+allowed_exts = {'jpg', 'jpeg','png','JPG','JPEG','PNG'}
 
-
+def check_allowed_file(filename):
+    if filename.rsplit('.',1)[1] in allowed_exts:
+        return True
+    else:
+        return False
 
 # *** CONFIGURE FLASK APPLICATION ***
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('LOCAL_DB_URL')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URL', 'sqlite:///food-collection.db')
 # "sqlite:///food-collection.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
 # *** DATABASE TABLES ***
@@ -39,7 +48,6 @@ class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), unique=True, nullable=False)
     expiry = db.Column(db.Integer, nullable=False)
-
     # return a dictionary as a method in class Food
     def to_dict(self):
         # for each column in table, set key as name of column and value is value of column. 
@@ -52,19 +60,19 @@ class Recipe(db.Model):
     url = db.Column(db.String(80), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     ingredients = db.relationship("Ingredient", backref="recipe")
-
+    # setting these as nullable=true for now, because there exists recipes w/o type and image rn. may modify later.
+    foodType = db.Column(db.String(80), nullable=True)
+    image = db.Column(db.String(120), nullable=True)
     # return a dictionary as a method in class Recipe
     def to_dict(self):
         # for each column in table, set key as name of column and value is value of column. 
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
             
-
 class Ingredient(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     quantity = db.Column(db.String(80), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"))
-
     # return a dictionary as a method in class Ingredient
     def to_dict(self):
         # for each column in table, set key as name of column and value is value of column. 
@@ -86,12 +94,18 @@ def main():
             print("You had a missing field. Please fill in all fields to add new item.")
             pass
         else:
-            newFoodEntry = Food(
-                title = food,
-                expiry = expiry,
-            )
-            db.session.add(newFoodEntry)
-            db.session.commit()
+            search = db.session.query(Food).filter_by(title=food).first()
+            # if food already in database, dont add! 
+            if search:
+                print("already exists in database")
+                pass
+            else:
+                newFoodEntry = Food(
+                    title = food,
+                    expiry = expiry,
+                )
+                db.session.add(newFoodEntry)
+                db.session.commit()
 
     foods = db.session.query(Food).all()
     recipes = db.session.query(Recipe).all()
@@ -133,13 +147,32 @@ def editFood():
 @app.route("/addRecipe", methods=["GET", "POST"])
 def webAddRecipe():
     if request.method == "POST":
-        
-        print(type(request.form.get("instructions")))
+        # check if user submitted an image file.
+        if 'recipeImage' not in request.files:
+            print('no image attached ')
+            return redirect(url_for('main'))
+
+        file = request.files['recipeImage']
+        if file == "":
+            print('No file selected')
+            return redirect(url_for('main'))
+
+        if file and check_allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            print(filename)
+            img = Image.open(file.stream) 
+            with BytesIO() as buf:
+                img.save(buf, 'png')
+                image_bytes = buf.getvalue()
+            encoded_string = base64.b64encode(image_bytes).decode()
+            
         newRecipe = Recipe(
             title = request.form.get("recipeTitle"),
             rating=request.form.get("rating"),
             instructions = request.form.get("instructions"),
-            url = request.form.get("recipeURL")
+            url = request.form.get("recipeURL"),
+            foodType = request.form.get("foodType"),
+            image = encoded_string
         )
         # loop through table of ingredients and get ingredients if theyre not empty    
         for i in range(20):
@@ -154,6 +187,7 @@ def webAddRecipe():
         
         db.session.add(newRecipe)
         db.session.commit()     
+
         return redirect(url_for('main'))
     return render_template("addNewRecipe.html")
 
