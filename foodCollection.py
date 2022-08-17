@@ -79,7 +79,7 @@ class Ingredient(db.Model):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
 
 # ******* create  initial database. ran once. *********
-# db.create_all()
+db.create_all()
 
 # web app - main page 
 @app.route("/", methods=["GET", "POST"])
