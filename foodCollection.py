@@ -62,7 +62,7 @@ class Recipe(db.Model):
     ingredients = db.relationship("Ingredient", backref="recipe")
     # setting these as nullable=true for now, because there exists recipes w/o type and image rn. may modify later.
     foodType = db.Column(db.String(80), nullable=True)
-    image = db.Column(db.Text(20000 ), nullable=True)
+    image = db.Column(db.VARCHAR, nullable=True)
     # return a dictionary as a method in class Recipe
     def to_dict(self):
         # for each column in table, set key as name of column and value is value of column. 
