@@ -164,7 +164,7 @@ def webAddRecipe():
             with BytesIO() as buf:
                 img.save(buf, 'png')
                 image_bytes = buf.getvalue()
-            encoded_string = base64.b64encode(image_bytes).decode("utf-8", "ignore")
+            encoded_string = base64.b64encode(image_bytes).decode("ASCII", "ignore")
             
         newRecipe = Recipe(
             title = request.form.get("recipeTitle"),
