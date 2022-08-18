@@ -31,7 +31,7 @@
         {% for item in recipes%}
         <h5><strong><a href={{item.url}}>{{item.title}}</a></strong>   <a href="{{ url_for('editRecipe', id=item.id) }}">EDIT</a> <a href="{{ url_for('deleteRecipe', id=item.id) }}">DELETE</a></h5>
 
-        <img src="data:image/jpeg;base64,{{ item.image.decode() }}" id="img-upload" alt="img_data" class="img-upload"/>
+        <img src="data:image/jpeg;base64,{{item.image.decode() }}" id="img-upload" alt="img_data" class="img-upload"/>
         
         <h6>Rating: {{item.rating}} / 5</h6>
         <h6>Ingredients:</h6>
