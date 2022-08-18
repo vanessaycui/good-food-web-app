@@ -62,7 +62,7 @@ class Recipe(db.Model):
     ingredients = db.relationship("Ingredient", backref="recipe")
     # setting these as nullable=true for now, because there exists recipes w/o type and image rn. may modify later.
     foodType = db.Column(db.String(80), nullable=True)
-    image = db.Column(db.Text, nullable=True)
+    image = db.Column(db.Text(250), nullable=True)
     # return a dictionary as a method in class Recipe
     def to_dict(self):
         # for each column in table, set key as name of column and value is value of column. 
@@ -283,19 +283,6 @@ def webAddFood():
 # API -> add new food. when user enters in food collection, it checks if it's unique before adding.
 @app.route("/add", methods=['POST'])
 def post_new_food():
-
-    # api_key = request.args.get("api_key")
-    # if api_key == "TopSecretAPIKey":
-
-    #     newFoodEntry = Food(
-    #         title = request.args.get("title"),
-    #         expiry = request.args.get("expiry"),
-    #     )
-
-    #     db.session.add(newFoodEntry)
-    #     db.session.commit()
-
-    # my app will be sending a POST request via json encoding.
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
         json = request.json
